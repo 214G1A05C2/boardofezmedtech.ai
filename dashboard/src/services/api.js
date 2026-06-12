@@ -2,7 +2,7 @@ import axios from "axios";
 
 const configuredBaseURL =
   process.env.REACT_APP_API_URL ||
-  "https://clinicmetrics-backend.vercel.app";
+  "https://clinicmetrics-backend.onrender.com";
 
 const baseURL = configuredBaseURL
   .replace(/\/api\/call-metrics\/?$/, "")

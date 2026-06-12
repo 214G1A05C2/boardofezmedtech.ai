@@ -26,6 +26,11 @@ import theme from "./theme";
 // =========================================
 
 function App() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined"
+      ? window.innerWidth < 768
+      : false
+  );
   const [calls, setCalls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -77,6 +82,19 @@ function App() {
 
     return () => {
       isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    updateIsMobile();
+    window.addEventListener("resize", updateIsMobile);
+
+    return () => {
+      window.removeEventListener("resize", updateIsMobile);
     };
   }, []);
 
@@ -245,16 +263,38 @@ filteredCalls.forEach((item) => {
   return (
     <div
   id="dashboard-content"
-  style={styles.page}
+  style={{
+    ...styles.page,
+    padding: isMobile ? "14px" : styles.page.padding,
+  }}
 >
 
-      <div style={styles.header}>
-        <h1 style={styles.title}>
+      <div
+        style={{
+          ...styles.header,
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: isMobile ? "stretch" : "center",
+          gap: isMobile ? "14px" : "0",
+        }}
+      >
+        <h1
+          style={{
+            ...styles.title,
+            fontSize: isMobile ? "28px" : styles.title.fontSize,
+            lineHeight: 1.1,
+          }}
+        >
           AI Voice Agent
           Metrics
         </h1>
 
-        <div style={styles.filterContainer}>
+        <div
+          style={{
+            ...styles.filterContainer,
+            flexDirection: isMobile ? "column" : "row",
+            width: isMobile ? "100%" : "auto",
+          }}
+        >
           <select
             value={selectedClinic}
             onChange={(e) =>
@@ -325,33 +365,47 @@ filteredCalls.forEach((item) => {
   appointments={appointmentsHandled}
   frontDeskCalls={frontDeskCalls}
   silentCalls={silentCalls}
+  isMobile={isMobile}
 />
       {/* TOP CHARTS */}
 
-      <div style={styles.chartGrid}>
+      <div
+        style={{
+          ...styles.chartGrid,
+          gridTemplateColumns: isMobile
+            ? "1fr"
+            : styles.chartGrid.gridTemplateColumns,
+        }}
+      >
         {/* PIE CHART */}
 
         <RequestPieChart
   filteredCalls={filteredCalls}
+  isMobile={isMobile}
 />
         {/* CLINIC BAR CHART */}
 
-        <div style={styles.chartCard}>
+        <div
+          style={{
+            ...styles.chartCard,
+            minWidth: 0,
+          }}
+        >
           <h2 style={styles.chartTitle}>
             Calls by Clinic
           </h2>
 
           <ResponsiveContainer
             width="100%"
-            height={500}
+            height={isMobile ? 360 : 500}
           >
             <BarChart
               data={clinicData}
               margin={{
                 top: 20,
-                right: 20,
-                left: 20,
-                bottom: 60,
+                right: isMobile ? 10 : 20,
+                left: isMobile ? 10 : 20,
+                bottom: isMobile ? 90 : 60,
               }}
             >
               <CartesianGrid
@@ -361,10 +415,10 @@ filteredCalls.forEach((item) => {
               <XAxis
                 dataKey="clinic"
                 tick={{
-                  fontSize: 12,
+                  fontSize: isMobile ? 10 : 12,
                   fontWeight: 600,
                 }}
-                angle={-10}
+                angle={isMobile ? -35 : -10}
                 textAnchor="end"
                 interval={0}
               >
@@ -381,11 +435,11 @@ filteredCalls.forEach((item) => {
 
               <YAxis
                 tick={{
-                  fontSize: 12,
+                  fontSize: isMobile ? 10 : 12,
                   fontWeight: 600,
                 }}
                 angle={-20}
-textAnchor="end"
+                textAnchor="end"
               >
                 <Label
                   value="Number of Calls"
@@ -427,22 +481,27 @@ textAnchor="end"
 
       {/* MONTH CHART */}
 
-      <div style={styles.monthCard}>
+      <div
+        style={{
+          ...styles.monthCard,
+          minWidth: 0,
+        }}
+      >
         <h2 style={styles.chartTitle}>
           Monthly Requests
         </h2>
 
         <ResponsiveContainer
           width="100%"
-          height={300}
+          height={isMobile ? 250 : 300}
         >
           <BarChart
             data={monthData}
             margin={{
               top: 20,
-              right: 20,
-              left: 20,
-              bottom: 50,
+              right: isMobile ? 10 : 20,
+              left: isMobile ? 10 : 20,
+              bottom: isMobile ? 70 : 50,
             }}
           >
             <CartesianGrid
@@ -452,7 +511,7 @@ textAnchor="end"
             <XAxis
               dataKey="month"
               tick={{
-                fontSize: 13,
+                fontSize: isMobile ? 10 : 13,
                 fontWeight: 600,
               }}
             >
@@ -469,7 +528,7 @@ textAnchor="end"
 
             <YAxis
               tick={{
-                fontSize: 13,
+                fontSize: isMobile ? 10 : 13,
                 fontWeight: 600,
               }}
             >

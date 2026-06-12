@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import theme from "../theme";
 
-function RequestPieChart({ filteredCalls = [] }) {
+function RequestPieChart({ filteredCalls = [], isMobile = false }) {
   const requestMap = {};
 
   filteredCalls.forEach((item) => {
@@ -59,15 +59,15 @@ function RequestPieChart({ filteredCalls = [] }) {
 
       <ResponsiveContainer
         width="100%"
-        height={550}
+        height={isMobile ? 430 : 550}
       >
         <BarChart
           data={chartData}
           layout="vertical"
           margin={{
             top: 10,
-            right: 60,
-            left: 200,
+            right: isMobile ? 24 : 60,
+            left: isMobile ? 110 : 200,
             bottom: 10,
           }}
         >
@@ -78,9 +78,9 @@ function RequestPieChart({ filteredCalls = [] }) {
           <YAxis
             type="category"
             dataKey="name"
-            width={190}
+            width={isMobile ? 100 : 190}
             tick={{
-              fontSize: 12,
+              fontSize: isMobile ? 10 : 12,
             }}
           />
 

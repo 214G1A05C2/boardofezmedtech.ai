@@ -6,6 +6,7 @@ function SummaryCards({
   appointments,
   frontDeskCalls,
   silentCalls,
+  isMobile = false,
 }) {
   const cards = [
     [
@@ -31,7 +32,14 @@ function SummaryCards({
   ];
 
   return (
-    <div className="summary-grid">
+    <div
+      className="summary-grid"
+      style={{
+        gridTemplateColumns: isMobile
+          ? "1fr"
+          : "repeat(4, minmax(0, 1fr))",
+      }}
+    >
       {cards.map(([title, value, color]) => (
         <div
           key={title}
@@ -43,6 +51,7 @@ function SummaryCards({
             color: "#fff",
             padding: "20px",
             border: `1px solid rgba(255,255,255,0.18)`,
+            minWidth: 0,
           }}
         >
           <h4>{title}</h4>
