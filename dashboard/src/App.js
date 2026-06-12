@@ -41,6 +41,19 @@ function App() {
   const [selectedMonth, setSelectedMonth] =
     useState("All Months");
 
+  const filterOutSmokeTest = (rows = []) =>
+    rows.filter((item) => {
+      const callId = Number(item.call_id);
+      const clinicName = String(item.clinic_name || "")
+        .trim()
+        .toLowerCase();
+
+      return (
+        callId !== 55555 &&
+        clinicName !== "smoke test clinic"
+      );
+    });
+
   // =========================================
   // FETCH DATA
   // =========================================
@@ -57,7 +70,7 @@ function App() {
         if (!isMounted) return;
 
         if (Array.isArray(response.data)) {
-          setCalls(response.data);
+          setCalls(filterOutSmokeTest(response.data));
         } else {
           setCalls([]);
         }
